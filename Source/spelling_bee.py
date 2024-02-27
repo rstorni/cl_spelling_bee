@@ -8,6 +8,7 @@ Purpose: comand line version of the NYT spelling bee game
 import argparse
 import random
 import os
+import re
 import game_manager as gm
 
 
@@ -35,7 +36,16 @@ def get_args():
 
     return parser.parse_args()
 
-
+# -------------------------------------------------------
+def contains_pangram(sm):
+    for words in sm.words:
+        pangram = True
+        for letters in sm.letters:
+            if letters not in words:
+                pangram = False
+        if pangram:
+            return True
+    return False
 
 # -------------------------------------------------------
 def main():
@@ -56,20 +66,22 @@ def main():
         has_save = input('Do you have a saved game please type yes or no: ...').lower().rstrip()
     if has_save == 'yes':
 
-        onlyfiles = [f for f in os.listdir('../save_states') if os.path.isfile(os.path.join('../save_states', f))]
+        onlyfiles = [f.split('.')[0] for f in os.listdir('../save_states') if os.path.isfile(os.path.join('../save_states', f))]
 
         os.system('cls||clear')
         print('Existing Save Files!')
         print("*" * 100)
         for file in onlyfiles:
-            print(f"* {file}")
+            print(f"* {file.rstrip()}")
         print("*" * 100)
 
         #print the names of the files in save_states
         selected_save = input('\nselect a save_State:...')
         sm.load(selected_save)
+        os.system('cls||clear')
+        print('Load Successful!')
     else:
-        while len(sm.get_words()) < 10:
+        while len(sm.get_words()) < 10 or not contains_pangram(sm):
             sm = gm.Manager(DICTIONARY)
 
 
@@ -82,7 +94,7 @@ def main():
     # ------------------------ Game loop --------------------------------
     while sm.get_playing():
         # For Debug
-        # print(sm.get_words())
+        print(sm.get_words())
         # print(max_score)
 
         sm.describe()

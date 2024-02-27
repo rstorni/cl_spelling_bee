@@ -87,7 +87,7 @@ class Manager:
     def set_score(self, score):
         self.score = score
 
-    
+
     # -------------------------------------------------------
     def rand_letters(self, num_consonants, num_vowels):
         """generates a random set of letters including consonants and vowels"""
