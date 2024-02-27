@@ -36,6 +36,7 @@ def get_args():
     return parser.parse_args()
 
 
+
 # -------------------------------------------------------
 def main():
     """Main function where all logic will be executed"""
@@ -44,15 +45,34 @@ def main():
     args = get_args()
     random.seed(args.seed)
     DICTIONARY = [line.rstrip() for line in args.dictionary_file]
-
+    has_save = ''
     sm = gm.Manager(DICTIONARY)
-
-    while len(sm.get_words()) < 10:
-        sm = gm.Manager(DICTIONARY)
 
     # ------------------------ starting Prompt --------------------------
     os.system('cls||clear')
     print('Welcome to the comand line version of Spelling Bee!')
+
+    while has_save != 'yes' and has_save != 'no':
+        has_save = input('Do you have a saved game please type yes or no: ...').lower().rstrip()
+    if has_save == 'yes':
+
+        onlyfiles = [f for f in os.listdir('../save_states') if os.path.isfile(os.path.join('../save_states', f))]
+
+        os.system('cls||clear')
+        print('Existing Save Files!')
+        print("*" * 100)
+        for file in onlyfiles:
+            print(f"* {file}")
+        print("*" * 100)
+
+        #print the names of the files in save_states
+        selected_save = input('\nselect a save_State:...')
+        sm.load(selected_save)
+    else:
+        while len(sm.get_words()) < 10:
+            sm = gm.Manager(DICTIONARY)
+
+
     print("Create as many words as you can with the following set of letters:")
     print(f'{sm.get_letters()}')
     print(f'Please note that all created words must contain the letter "{sm.get_key_letter()}"')
@@ -77,6 +97,14 @@ def main():
 
         playing = input('Type "QUIT" to stop playing or hit any key to continue: ...\n').lower().rstrip()
         if playing == 'quit':
+            os.system('cls||clear')
+            is_saved = input('Do you want to save your game: Type Yes or No\n').lower().rstrip()
+            while is_saved != 'yes' and is_saved != 'no':
+                is_saved = input('Do you want to save your game: Type Yes or No\n').lower().rstrip()
+                print(is_saved)
+            if is_saved == 'yes':
+                save_file = input('name your save file: ...')
+                sm.save(save_file)
             break
         else:
             os.system('cls||clear')

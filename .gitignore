@@ -75,3 +75,6 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Save States
+save_states/

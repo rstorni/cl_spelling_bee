@@ -8,6 +8,7 @@ import random
 import string
 import math
 import re
+import pickle
 
 class Manager:
     """ Manages game state for spelling_bee.py """
@@ -46,16 +47,19 @@ class Manager:
 
     # ------------------------------------------------------
     def get_key_letter(self):
+        """"""
         return self.key_letter
 
 
     # ------------------------------------------------------
     def get_words(self):
+        """"""
         return self.words
     
 
     # ------------------------------------------------------
     def get_correct_words(self):
+        """"""
         return self.correct_words
     
 
@@ -144,6 +148,31 @@ class Manager:
     # ------------------------------------------------------
     def is_word_valid(self, word):
         return (word in self.words) and (word not in self.correct_words)
+    
+
+    # ------------------------------------------------------
+    def save(self, savefile):
+        pickle_out = open(f'../save_states/{savefile}.pickle', 'wb')
+        pickle.dump(self, pickle_out)
+        pickle_out.close()
+
+
+    # ------------------------------------------------------
+    def load(self, savefile):
+        pickle_in = open(f'../save_states/{savefile}.pickle', 'rb')
+        example = pickle.load(pickle_in)
+        
+        self.consonants = example.consonants
+        self.num_vowels = example.num_vowels
+
+        self.letters = example.letters
+        self.key_letter = example.key_letter
+        self.words = example.words
+        self.max_score = example.max_score
+        
+        self.playing = True
+        self.correct_words = example.correct_words
+        self.score = example.score
 
 
     # ------------------------------------------------------
